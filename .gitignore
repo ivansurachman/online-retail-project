@@ -9,4 +9,5 @@ airflow-webserver.pid
 webserver_config.py
 airflow.cfg
 airflow.db
-include/gcp/
+include/gcp/*
+dags/.env
