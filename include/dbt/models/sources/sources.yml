@@ -1,7 +1,7 @@
 version: 2
 
 sources:
-  - name: retail
+  - name: retail_dataset
     database: ${PROJECT_ID}
 
     tables:
