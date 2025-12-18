@@ -11,3 +11,6 @@ airflow.cfg
 airflow.db
 include/gcp/*
 dags/.env
+
+profiles.yml
+dbt_env/
