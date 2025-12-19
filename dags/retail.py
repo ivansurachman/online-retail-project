@@ -5,10 +5,18 @@ from airflow.providers.google.cloud.transfers.local_to_gcs import LocalFilesyste
 from airflow.providers.google.cloud.operators.bigquery import BigQueryCreateEmptyDatasetOperator, BigQueryInsertJobOperator
 from airflow.providers.google.cloud.transfers.gcs_to_bigquery import GCSToBigQueryOperator
 
+from pathlib import Path
 import os
 from dotenv import load_dotenv
 
 load_dotenv()
+
+def load_sql(filename):
+    """Load SQL file from include/dataset directory"""
+    sql_path = Path(__file__).parent.parent / 'include' / 'dataset' / filename
+    return sql_path.read_text()
+
+country_sql = load_sql('country.sql')
 
 @dag(
     start_date=datetime(2025,1,1),
@@ -16,11 +24,6 @@ load_dotenv()
     catchup=False,
     tags=['retail']
 )
-
-def load_sql(filename):
-    """Load SQL file from include/dataset directory"""
-    sql_path = Path(__file__).parent.parent / 'include' / 'dataset' / filename
-    return sql_path.read_text()
 
 def retail():
 
@@ -70,7 +73,7 @@ def retail():
         task_id='bqsql_insert_country_data',
         configuration={
             "query": {
-                "query": load_sql('country.sql'),
+                "query": country_sql,
                 "useLegacySql": False,
             }
         },

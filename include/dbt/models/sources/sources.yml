@@ -1,9 +1,0 @@
-version: 2
-
-sources:
-  - name: retail_dataset
-    database: ${PROJECT_ID}
-
-    tables:
-      - name: raw_invoices
-			- name: country
