@@ -5,6 +5,10 @@ from airflow.providers.google.cloud.transfers.local_to_gcs import LocalFilesyste
 from airflow.providers.google.cloud.operators.bigquery import BigQueryCreateEmptyDatasetOperator, BigQueryInsertJobOperator
 from airflow.providers.google.cloud.transfers.gcs_to_bigquery import GCSToBigQueryOperator
 
+from cosmos.airflow.task_group import DbtTaskGroup
+from cosmos.constants import LoadMode
+from cosmos.config import ProfileConfig, ProjectConfig, RenderConfig
+
 from pathlib import Path
 import os
 from dotenv import load_dotenv
@@ -84,5 +88,22 @@ def retail():
         gcp_conn_id=gcp_conn_id
     )
 
+    dbt_tg = DbtTaskGroup(
+        group_id="dbt_transformations",
+        project_config=ProjectConfig(
+            dbt_project_path='/usr/local/airflow/include/dbt',
+        ),
+        profile_config=ProfileConfig(
+            profile_name="retail",
+            target_name="dev",
+            profile_yml_filepath=Path('/usr/local/airflow/include/dbt/profiles.yml')
+        ),
+        render_config=RenderConfig(
+            load_method=LoadMode.DBT_LS,
+            select=['path:models/staging', 'path:models/marts']
+        )
+    )
+
     upload_csv_to_gcs >> create_retail_dataset >> gcs_to_raw >> bqsql_insert_country_data
+
 retail()

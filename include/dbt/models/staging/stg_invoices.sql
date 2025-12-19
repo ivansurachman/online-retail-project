@@ -7,8 +7,10 @@ SELECT
     Quantity,
     CASE
       WHEN LENGTH(InvoiceDate) = 16 THEN
+        -- Date format: MM/DD/YYYY HH:MM
         PARSE_DATETIME('%m/%d/%Y %H:%M', InvoiceDate)
       WHEN LENGTH(InvoiceDate) <= 14 THEN
+        -- Date format: M/D/YY HH:MM
         PARSE_DATETIME('%m/%d/%y %H:%M', InvoiceDate)
       ELSE NULL
     END AS invoice_datetime,
