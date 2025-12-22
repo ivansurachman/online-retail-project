@@ -3,7 +3,7 @@ version: 2
 sources:
   - name: raw
     database: "{{ env_var('PROJECT_ID') }}"
-    schema: retail_dataset
+    schema: bronze_retail
     tables:
       - name: raw_invoices
       - name: country

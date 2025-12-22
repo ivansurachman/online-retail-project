@@ -1,4 +1,4 @@
-from airflow.decorators import dag, task
+from airflow.sdk import dag, task
 from datetime import datetime
 
 from airflow.providers.google.cloud.transfers.local_to_gcs import LocalFilesystemToGCSOperator
@@ -7,7 +7,7 @@ from airflow.providers.google.cloud.transfers.gcs_to_bigquery import GCSToBigQue
 
 from cosmos.airflow.task_group import DbtTaskGroup
 from cosmos.constants import LoadMode
-from cosmos.config import ProfileConfig, ProjectConfig, RenderConfig
+from cosmos.config import ProfileConfig, ProjectConfig, RenderConfig, ExecutionConfig
 
 from pathlib import Path
 import os
@@ -35,7 +35,9 @@ def retail():
     project_id =  os.getenv('PROJECT_ID')
     raw_table_name = 'raw_invoices'
     gcp_conn_id = 'gcp'
-    dataset_id = 'retail_dataset'
+    bronze_dataset = 'bronze_retail'
+    silver_dataset = 'silver_retail'
+    gold_dataset = 'gold_retail'
     
     upload_csv_to_gcs = LocalFilesystemToGCSOperator(
         task_id='upload_csv_to_gcs',
@@ -46,9 +48,9 @@ def retail():
         mime_type='text/csv'
     )
 
-    create_retail_dataset = BigQueryCreateEmptyDatasetOperator(
-        task_id='create_retail_dataset',
-        dataset_id=dataset_id,
+    create_bronze_dataset = BigQueryCreateEmptyDatasetOperator(
+        task_id='create_bronze_dataset',
+        dataset_id=bronze_dataset,
         gcp_conn_id=gcp_conn_id
     )
 
@@ -56,7 +58,7 @@ def retail():
         task_id='gcs_to_raw',
         bucket=bucket_name,
         source_objects=['raw/online_retail.csv'],
-        destination_project_dataset_table=f'{project_id}.retail_dataset.{raw_table_name}',
+        destination_project_dataset_table=f'{project_id}.{bronze_dataset}.{raw_table_name}',
         source_format='CSV',
         schema_fields=[
             {'name': 'InvoiceNo', 'type': 'STRING', 'mode': 'NULLABLE'},
@@ -83,7 +85,7 @@ def retail():
         },
         params={
             "project_id": project_id,
-            "dataset_name": dataset_id
+            "dataset_name": bronze_dataset,
         },
         gcp_conn_id=gcp_conn_id
     )
@@ -96,7 +98,10 @@ def retail():
         profile_config=ProfileConfig(
             profile_name="retail",
             target_name="dev",
-            profile_yml_filepath=Path('/usr/local/airflow/include/dbt/profiles.yml')
+            profiles_yml_filepath=Path("/usr/local/airflow/include/dbt/profiles.yml"),
+        ),
+        execution_config=ExecutionConfig(
+            dbt_executable_path=Path("/usr/local/bin/dbt"),
         ),
         render_config=RenderConfig(
             load_method=LoadMode.DBT_LS,
@@ -104,6 +109,6 @@ def retail():
         )
     )
 
-    upload_csv_to_gcs >> create_retail_dataset >> gcs_to_raw >> bqsql_insert_country_data
+    upload_csv_to_gcs >> create_retail_dataset >> gcs_to_raw >> bqsql_insert_country_data >> dbt_tg
 
 retail()

@@ -1,0 +1,37 @@
+[0m22:05:32.087608 [debug] [MainThread]: Sending event: {'category': 'dbt', 'action': 'invocation', 'label': 'start', 'context': [<snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x7fafd534a270>, <snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x7fafd5883b30>, <snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x7fafd7d1c560>]}
+
+
+============================== 22:05:32.091231 | 567e71e4-6d81-428b-914d-f2e6ec670b66 ==============================
+[0m22:05:32.091231 [info ] [MainThread]: Running with dbt=1.11.0-rc4
+[0m22:05:32.091955 [debug] [MainThread]: running dbt with arguments {'invocation_command': 'dbt ', 'partial_parse': 'True', 'cache_selected_only': 'False', 'write_json': 'True', 'log_format': 'default', 'printer_width': '80', 'quiet': 'False', 'profiles_dir': '/home/ivan/repos/etl-online-retail-project/include/dbt', 'send_anonymous_usage_stats': 'True', 'warn_error': 'None', 'static_parser': 'True', 'target_path': 'None', 'version_check': 'True', 'no_print': 'None', 'introspect': 'True', 'use_colors': 'True', 'fail_fast': 'False', 'debug': 'False', 'indirect_selection': 'eager', 'use_experimental_parser': 'False', 'warn_error_options': 'WarnErrorOptionsV2(error=[], warn=[], silence=[])', 'log_cache_events': 'False', 'log_path': '/home/ivan/repos/etl-online-retail-project/include/dbt/logs', 'empty': 'None'}
+[0m22:05:32.096580 [warn ] [MainThread]: [[33mWARNING[0m][MissingPlusPrefixDeprecation]: Deprecated functionality
+Missing '+' prefix on `materialized` found at
+`retail_analytics.staging.materialized` in file
+`/home/ivan/repos/etl-online-retail-project/include/dbt/dbt_project.yml`.
+Hierarchical config values without a '+' prefix are deprecated in
+dbt_project.yml.
+[0m22:05:32.097296 [debug] [MainThread]: Sending event: {'category': 'dbt', 'action': 'deprecation', 'label': '567e71e4-6d81-428b-914d-f2e6ec670b66', 'property_': 'warn', 'context': [<snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x7fafd5076ff0>]}
+[0m22:05:32.288323 [debug] [MainThread]: Sending event: {'category': 'dbt', 'action': 'project_id', 'label': '567e71e4-6d81-428b-914d-f2e6ec670b66', 'context': [<snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x7fafd50768a0>]}
+[0m22:05:32.310399 [debug] [MainThread]: Set downloads directory='/tmp/dbt-downloads-z724w_fv'
+[0m22:05:32.311463 [debug] [MainThread]: Making package index registry request: GET https://hub.getdbt.com/api/v1/index.json
+[0m22:05:32.456290 [debug] [MainThread]: Response from registry index: GET https://hub.getdbt.com/api/v1/index.json 200
+[0m22:05:32.460907 [debug] [MainThread]: Making package registry request: GET https://hub.getdbt.com/api/v1/dbt-labs/dbt_utils.json
+[0m22:05:32.522076 [debug] [MainThread]: Response from registry: GET https://hub.getdbt.com/api/v1/dbt-labs/dbt_utils.json 200
+[0m22:05:32.541875 [info ] [MainThread]: Updating lock file in file path: /home/ivan/repos/etl-online-retail-project/include/dbt/package-lock.yml
+[0m22:05:32.549831 [debug] [MainThread]: Set downloads directory='/tmp/dbt-downloads-zqndjqfb'
+[0m22:05:32.560427 [info ] [MainThread]: Installing dbt-labs/dbt_utils
+[0m22:05:32.985520 [info ] [MainThread]: Installed from version 1.3.3
+[0m22:05:32.986022 [info ] [MainThread]: Up to date!
+[0m22:05:32.986367 [debug] [MainThread]: Sending event: {'category': 'dbt', 'action': 'package', 'label': '567e71e4-6d81-428b-914d-f2e6ec670b66', 'property_': 'install', 'context': [<snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x7fafd4f714f0>, <snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x7fafd51e5ee0>]}
+[0m22:05:32.987356 [warn ] [MainThread]: [[33mWARNING[0m][DeprecationsSummary]: Deprecated functionality
+Summary of encountered deprecations:
+- MissingPlusPrefixDeprecation: 2 occurrences
+To see all deprecation instances instead of just the first occurrence of each,
+run command again with the `--show-all-deprecations` flag. You may also need to
+run with `--no-partial-parse` as some deprecations are only encountered during
+parsing.
+[0m22:05:32.992272 [debug] [MainThread]: Resource report: {"command_name": "deps", "command_success": true, "command_wall_clock_time": 0.9805696, "process_in_blocks": "2632", "process_kernel_time": 0.836501, "process_mem_max_rss": "116540", "process_out_blocks": "2312", "process_user_time": 2.657592}
+[0m22:05:32.993006 [debug] [MainThread]: Command `cli deps` succeeded at 22:05:32.992880 after 0.98 seconds
+[0m22:05:32.993341 [debug] [MainThread]: Sending event: {'category': 'dbt', 'action': 'invocation', 'label': 'end', 'context': [<snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x7fafd9fb3320>, <snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x7fafd51ba6c0>, <snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x7fafd603a8d0>]}
+[0m22:05:32.993851 [debug] [MainThread]: Flushing usage events
+[0m22:05:34.076579 [debug] [MainThread]: An error was encountered while trying to flush usage events
