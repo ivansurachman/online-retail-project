@@ -1,4 +1,4 @@
-CREATE TABLE IF NOT EXISTS `{{params.project_id}}.{{params.dataset_name}}.country` (
+CREATE TABLE IF NOT EXISTS `{{params.project_id}}.{{params.dataset_name}}.raw_country` (
   `id` INT NOT NULL,
   `iso` STRING NOT NULL,
   `name` STRING NOT NULL,
@@ -12,7 +12,7 @@ CREATE TABLE IF NOT EXISTS `{{params.project_id}}.{{params.dataset_name}}.countr
 -- Dumping data for table `country`
 --
 
-INSERT INTO `{{params.project_id}}.{{params.dataset_name}}.country` (`id`, `iso`, `name`, `nicename`, `iso3`, `numcode`, `phonecode`) VALUES
+INSERT INTO `{{params.project_id}}.{{params.dataset_name}}.raw_country` (`id`, `iso`, `name`, `nicename`, `iso3`, `numcode`, `phonecode`) VALUES
 (1, 'AF', 'AFGHANISTAN', 'Afghanistan', 'AFG', 4, 93),
 (2, 'AL', 'ALBANIA', 'Albania', 'ALB', 8, 355),
 (3, 'DZ', 'ALGERIA', 'Algeria', 'DZA', 12, 213),

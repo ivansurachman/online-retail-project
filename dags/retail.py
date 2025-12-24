@@ -33,7 +33,7 @@ def retail():
 
     bucket_name = os.getenv('BUCKET_NAME')
     project_id =  os.getenv('PROJECT_ID')
-    raw_table_name = 'raw_invoices'
+    raw_table_invoices = 'raw_invoices'
     gcp_conn_id = 'gcp'
     bronze_dataset = 'bronze_retail'
     silver_dataset = 'silver_retail'
@@ -54,11 +54,23 @@ def retail():
         gcp_conn_id=gcp_conn_id
     )
 
+    create_silver_dataset = BigQueryCreateEmptyDatasetOperator(
+        task_id='create_silver_dataset',
+        dataset_id=silver_dataset,
+        gcp_conn_id=gcp_conn_id
+    )
+
+    create_gold_dataset = BigQueryCreateEmptyDatasetOperator(
+        task_id='create_gold_dataset',
+        dataset_id=gold_dataset,
+        gcp_conn_id=gcp_conn_id
+    )
+    
     gcs_to_raw = GCSToBigQueryOperator(
         task_id='gcs_to_raw',
         bucket=bucket_name,
         source_objects=['raw/online_retail.csv'],
-        destination_project_dataset_table=f'{project_id}.{bronze_dataset}.{raw_table_name}',
+        destination_project_dataset_table=f'{project_id}.{bronze_dataset}.{raw_table_invoices}',
         source_format='CSV',
         schema_fields=[
             {'name': 'InvoiceNo', 'type': 'STRING', 'mode': 'NULLABLE'},
@@ -91,7 +103,7 @@ def retail():
     )
 
     dbt_tg = DbtTaskGroup(
-        group_id="dbt_transformations",
+        group_id="dbt_bronze_to_silver",
         project_config=ProjectConfig(
             dbt_project_path='/usr/local/airflow/include/dbt',
         ),
@@ -105,10 +117,10 @@ def retail():
         ),
         render_config=RenderConfig(
             load_method=LoadMode.DBT_LS,
-            select=['path:models/staging', 'path:models/marts']
+            select=['path:models/staging']
         )
     )
 
-    upload_csv_to_gcs >> create_retail_dataset >> gcs_to_raw >> bqsql_insert_country_data >> dbt_tg
+    upload_csv_to_gcs >> create_bronze_dataset >> gcs_to_raw >> bqsql_insert_country_data >> dbt_tg
 
 retail()
