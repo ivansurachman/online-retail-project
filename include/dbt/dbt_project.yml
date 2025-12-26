@@ -18,7 +18,5 @@ clean-targets:
 
 models:
   retail_analytics:
-    staging:
-      materialized: view
     marts:
-      materialized: table
+      +materialized: table

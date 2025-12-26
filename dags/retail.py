@@ -82,7 +82,7 @@ def retail():
             {'name': 'InvoiceDate', 'type': 'STRING', 'mode': 'NULLABLE'},  # Changed to STRING
             {'name': 'UnitPrice', 'type': 'FLOAT', 'mode': 'NULLABLE'},
             {'name': 'CustomerID', 'type': 'STRING', 'mode': 'NULLABLE'},
-            {'name': 'Country', 'type': 'STRING', 'mode': 'NULLABLE'},
+            {'name': 'Country', 'type': 'STRING', 'mode': 'NULLABLE'}
         ],
         write_disposition='WRITE_TRUNCATE',  # or 'WRITE_APPEND'
         skip_leading_rows=1,  # if CSV has headers
@@ -126,7 +126,7 @@ def retail():
     
 
     chain(
-        # upload_csv_to_gcs,
+        upload_csv_to_gcs,
         create_bronze_dataset,
         create_silver_dataset,
         create_gold_dataset,

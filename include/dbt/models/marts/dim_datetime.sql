@@ -1,5 +1,3 @@
-{{ config(materialized='table') }}
-
 SELECT DISTINCT
     FORMAT_DATETIME('%Y%m%d%H%M', invoice_datetime) AS datetime_id,
     invoice_datetime,

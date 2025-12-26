@@ -1,5 +1,3 @@
-{{ config(materialized='table') }}
-
 WITH fct_sales_cte AS (
     SELECT
         InvoiceNo AS invoice_id,

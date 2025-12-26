@@ -5,7 +5,7 @@ CREATE TABLE IF NOT EXISTS `{{params.project_id}}.{{params.dataset_name}}.raw_co
   `nicename` STRING NOT NULL,
   `iso3` STRING DEFAULT NULL,
   `numcode` INT DEFAULT NULL,
-  `phonecode` INT NOT NULL,
+  `phonecode` INT NOT NULL
 );
 
 --

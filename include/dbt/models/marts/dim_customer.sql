@@ -1,9 +1,7 @@
-{{ config(materialized='table') }}
-
 WITH customer_cte AS (
 	SELECT DISTINCT
-	    {{ dbt_utils.generate_surrogate_key(['CustomerID', 'Country']) }} as customer_id,
-	    Country AS country
+	    {{ dbt_utils.generate_surrogate_key(['customer_id', 'country']) }} as customer_id,
+		country
 	FROM {{ ref('stg_invoices') }}
 	WHERE CustomerID IS NOT NULL
 ), 
