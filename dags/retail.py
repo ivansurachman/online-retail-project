@@ -1,9 +1,11 @@
+
 from airflow.sdk import dag, task
 from datetime import datetime
 
 from airflow.providers.google.cloud.transfers.local_to_gcs import LocalFilesystemToGCSOperator
 from airflow.providers.google.cloud.operators.bigquery import BigQueryCreateEmptyDatasetOperator, BigQueryInsertJobOperator
 from airflow.providers.google.cloud.transfers.gcs_to_bigquery import GCSToBigQueryOperator
+from airflow.models.baseoperator import chain
 
 from cosmos.airflow.task_group import DbtTaskGroup
 from cosmos.constants import LoadMode
@@ -102,7 +104,7 @@ def retail():
         gcp_conn_id=gcp_conn_id
     )
 
-    dbt_tg = DbtTaskGroup(
+    dbt_tg1 = DbtTaskGroup(
         group_id="dbt_bronze_to_silver",
         project_config=ProjectConfig(
             dbt_project_path='/usr/local/airflow/include/dbt',
@@ -121,6 +123,16 @@ def retail():
         )
     )
 
-    upload_csv_to_gcs >> create_bronze_dataset >> gcs_to_raw >> bqsql_insert_country_data >> dbt_tg
+    
+
+    chain(
+        # upload_csv_to_gcs,
+        create_bronze_dataset,
+        create_silver_dataset,
+        create_gold_dataset,
+        gcs_to_raw,
+        bqsql_insert_country_data,
+        dbt_tg1
+    )
 
 retail()
