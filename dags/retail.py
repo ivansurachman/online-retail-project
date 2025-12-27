@@ -1,10 +1,11 @@
 
-from airflow.sdk import dag, task
+from airflow.sdk import dag
 from datetime import datetime
 
 from airflow.providers.google.cloud.transfers.local_to_gcs import LocalFilesystemToGCSOperator
 from airflow.providers.google.cloud.operators.bigquery import BigQueryCreateEmptyDatasetOperator, BigQueryInsertJobOperator
 from airflow.providers.google.cloud.transfers.gcs_to_bigquery import GCSToBigQueryOperator
+
 from airflow.models.baseoperator import chain
 
 from cosmos.airflow.task_group import DbtTaskGroup
@@ -36,40 +37,13 @@ def retail():
     bucket_name = os.getenv('BUCKET_NAME')
     project_id =  os.getenv('PROJECT_ID')
     raw_table_invoices = 'raw_invoices'
+    raw_table_country = 'raw_country'
     gcp_conn_id = 'gcp'
     bronze_dataset = 'bronze_retail'
-    silver_dataset = 'silver_retail'
-    gold_dataset = 'gold_retail'
     
-    upload_csv_to_gcs = LocalFilesystemToGCSOperator(
-        task_id='upload_csv_to_gcs',
-        src='/usr/local/airflow/include/dataset/online_retail.csv',
-        dst='raw/online_retail.csv',
-        bucket=bucket_name,
-        gcp_conn_id=gcp_conn_id,
-        mime_type='text/csv'
-    )
 
-    create_bronze_dataset = BigQueryCreateEmptyDatasetOperator(
-        task_id='create_bronze_dataset',
-        dataset_id=bronze_dataset,
-        gcp_conn_id=gcp_conn_id
-    )
-
-    create_silver_dataset = BigQueryCreateEmptyDatasetOperator(
-        task_id='create_silver_dataset',
-        dataset_id=silver_dataset,
-        gcp_conn_id=gcp_conn_id
-    )
-
-    create_gold_dataset = BigQueryCreateEmptyDatasetOperator(
-        task_id='create_gold_dataset',
-        dataset_id=gold_dataset,
-        gcp_conn_id=gcp_conn_id
-    )
-    
-    gcs_to_raw = GCSToBigQueryOperator(
-        task_id='gcs_to_raw',
+    gcs_to_raw_invoice = GCSToBigQueryOperator(
+        task_id='gcs_to_raw_invoice',
         bucket=bucket_name,
         source_objects=['raw/online_retail.csv'],
         destination_project_dataset_table=f'{project_id}.{bronze_dataset}.{raw_table_invoices}',
@@ -88,23 +62,25 @@ def retail():
         skip_leading_rows=1,  # if CSV has headers
         gcp_conn_id=gcp_conn_id
     )
-
-    bqsql_insert_country_data = BigQueryInsertJobOperator(
-        task_id='bqsql_insert_country_data',
-        configuration={
-            "query": {
-                "query": country_sql,
-                "useLegacySql": False,
-            }
-        },
-        params={
-            "project_id": project_id,
-            "dataset_name": bronze_dataset,
-        },
+    
+    gcs_to_raw_country = GCSToBigQueryOperator(
+        task_id='gcs_to_raw_country',
+        bucket=bucket_name,
+        source_objects=['raw/country_codes.csv'],
+        destination_project_dataset_table=f'{project_id}.{bronze_dataset}.{raw_table_country}',
+        source_format='CSV',
+        schema_fields=[
+            {'name': 'Country', 'type': 'STRING', 'mode': 'NULLABLE'},
+            {'name': 'Alpha-2_code', 'type': 'STRING', 'mode': 'NULLABLE'},
+            {'name': 'Alpha-3_code', 'type': 'STRING', 'mode': 'NULLABLE'},
+            {'name': 'Numeric', 'type': 'STRING', 'mode': 'NULLABLE'}
+        ],
+        write_disposition='WRITE_TRUNCATE',  # or 'WRITE_APPEND'
+        skip_leading_rows=1,  # if CSV has headers
         gcp_conn_id=gcp_conn_id
     )
 
-    dbt_tg1 = DbtTaskGroup(
+    dbt_brz_to_slv = DbtTaskGroup(
         group_id="dbt_bronze_to_silver",
         project_config=ProjectConfig(
             dbt_project_path='/usr/local/airflow/include/dbt',
@@ -123,16 +99,30 @@ def retail():
         )
     )
 
-    
+    dbt_slv_to_gld = DbtTaskGroup(
+        group_id="dbt_silver_to_gold",
+        project_config=ProjectConfig(
+            dbt_project_path='/usr/local/airflow/include/dbt',
+        ),
+        profile_config=ProfileConfig(
+            profile_name="retail",
+            target_name="prod",
+            profiles_yml_filepath=Path("/usr/local/airflow/include/dbt/profiles.yml"),
+        ),
+        execution_config=ExecutionConfig(
+            dbt_executable_path=Path("/usr/local/bin/dbt"),
+        ),
+        render_config=RenderConfig(
+            load_method=LoadMode.DBT_LS,
+            select=['path:models/marts']
+        )
+    )
 
     chain(
-        upload_csv_to_gcs,
-        create_bronze_dataset,
-        create_silver_dataset,
-        create_gold_dataset,
-        gcs_to_raw,
-        bqsql_insert_country_data,
-        dbt_tg1
+        gcs_to_raw_invoice,
+        gcs_to_raw_country,
+        dbt_brz_to_slv,
+        dbt_slv_to_gld
     )
 
 retail()

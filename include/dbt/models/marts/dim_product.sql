@@ -1,3 +1,9 @@
+{{ 
+	config(
+		unique_key= 'product_id'
+	)
+}}
+
 SELECT DISTINCT
     {{ dbt_utils.generate_surrogate_key(['stock_code', 'description', 'unit_price']) }} as product_id,
 		stock_code,

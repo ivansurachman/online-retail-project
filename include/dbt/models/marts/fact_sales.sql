@@ -1,9 +1,14 @@
+{{ 
+	config(
+		unique_key= 'invoice_id'
+	)
+}}
 WITH fct_sales_cte AS (
     SELECT
         InvoiceNo AS invoice_id,
         FORMAT_DATETIME('%Y%m%d%H%M', invoice_datetime) AS datetime_id,
-        {{ dbt_utils.generate_surrogate_key(['StockCode', 'Description', 'unit_price']) }} as product_id,
-        {{ dbt_utils.generate_surrogate_key(['CustomerID', 'Country']) }} as customer_id,
+        {{ dbt_utils.generate_surrogate_key(['stock_code', 'description', 'unit_price']) }} as product_id,
+        {{ dbt_utils.generate_surrogate_key(['customer_id', 'country']) }} as customer_id,
         Quantity AS quantity,
         Quantity * unit_price AS total_amount
     FROM {{ ref('stg_invoices') }}

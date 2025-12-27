@@ -3,11 +3,12 @@
     materialized='incremental',
     unique_key= 'invoice_no',
     incremental_strategy= 'merge'
-    schema='silver_retail',
     partition_by={
       "field": "invoice_datetime",
-      "data_type": "date"
-    }
+      "data_type": "date",
+      "granularity": "day"
+    },
+    cluster_by=["country", "customer_id", "stock_code"]
   ) 
 }}
 

@@ -1,13 +1,7 @@
-{{ 
-    config(
-        materialized='view'
-    ) 
-}}
-
 SELECT
-    nicename AS country_name,
-    iso,
-    iso3,
+    Country AS country_name,
+    "Alpha-2_code" AS iso,
+    "Alpha-3_code" AS iso3,
     {{ dbt.current_timestamp() }} AS created_at
 FROM {{ source('raw', 'raw_country') }}
-WHERE nicename IS NOT NULL AND iso IS NOT NULL
+WHERE Country IS NOT NULL AND "Alpha-2_code" IS NOT NULL

@@ -1,3 +1,9 @@
+{{ 
+	config(
+		unique_key= 'customer_id'
+	)
+}}
+
 WITH customer_cte AS (
 	SELECT DISTINCT
 	    {{ dbt_utils.generate_surrogate_key(['customer_id', 'country']) }} as customer_id,
