@@ -3,8 +3,6 @@ apache-airflow-providers-google==19.1.0
 python-dotenv==1.2.1
 astronomer-cosmos[dbt-bigquery]==1.11.3
 protobuf==6.33.2
-dbt-core==1.11.0rc4
-dbt-bigquery==1.10.3
 ipykernel==7.1.0
 pandas==2.3.3
 beautifulsoup4==4.14.3

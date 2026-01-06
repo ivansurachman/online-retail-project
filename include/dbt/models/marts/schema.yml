@@ -1,0 +1,9 @@
+version: 2
+
+sources:
+  - name: staging
+    database: "{{ env_var('PROJECT_ID') }}"
+    schema: silver_retail
+    tables:
+      - name: stg_invoices
+      - name: stg_country

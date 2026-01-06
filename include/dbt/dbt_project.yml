@@ -19,10 +19,11 @@ clean-targets:
 models:
   retail_analytics:
     staging:
-      +schema: silver_retail
-      +materialized: view
+      +materialized: table
       +tags: ['silver', 'staging']
     marts:
-      +schema: gold_retail
       +materialized: table
       +tags: ['gold', 'marts']
+    reports:
+      +materialized: view
+      +tags: ['gold', 'reports']

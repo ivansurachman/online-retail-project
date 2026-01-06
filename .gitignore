@@ -14,3 +14,6 @@ dags/.env
 
 profiles.yml
 dbt_env/
+metabase.db
+metabase.db.mv.db
+metabase.db.trace.db

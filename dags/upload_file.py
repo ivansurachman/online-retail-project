@@ -6,6 +6,11 @@ from airflow.providers.google.cloud.operators.bigquery import BigQueryCreateEmpt
 
 from airflow.models.baseoperator import chain
 
+import os
+from dotenv import load_dotenv
+
+load_dotenv()
+
 @dag(
     start_date=datetime(2025,1,1),
     schedule=None,
@@ -14,8 +19,6 @@ from airflow.models.baseoperator import chain
 )
 def upload_file():
     bucket_name = os.getenv('BUCKET_NAME')
-    project_id =  os.getenv('PROJECT_ID')
-    raw_table_invoices = 'raw_invoices'
     gcp_conn_id = 'gcp'
     bronze_dataset = 'bronze_retail'
     silver_dataset = 'silver_retail'

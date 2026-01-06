@@ -1,5 +1,7 @@
 {{ 
 	config(
+        materialized='incremental',
+        incremental_strategy= 'merge',
 		unique_key= 'datetime_id'
 	)
 }}
@@ -14,5 +16,9 @@ SELECT DISTINCT
     EXTRACT(HOUR FROM invoice_datetime) AS hour,
     FORMAT_DATETIME('%A', invoice_datetime) AS day_name,
     FORMAT_DATETIME('%B', invoice_datetime) AS month_name
-FROM {{ ref('stg_invoices') }}
+FROM {{ source('staging', 'stg_invoices') }}
 WHERE invoice_datetime IS NOT NULL
+
+{% if is_incremental() %}
+AND invoice_datetime > (SELECT MAX(invoice_datetime) FROM {{ this }})
+{% endif %}
