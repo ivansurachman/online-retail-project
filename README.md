@@ -42,3 +42,7 @@ The data flow strictly adheres to the Medallion Architecture to manage data qual
 |Docker Desktop|4.51.0|Containerization for consistent and reproducible environment setup.|
 |Metabase|v0.57.x|BI tool connected to the Gold Layer Star Schema for creating dynamic dashboards.|
 |WSL (Ubuntu)|24.04.3 LTS (Noble Numbat)|Local Host Environment to isolated run Docker, Astro CLI, & Python|
+
+### Dashboard Output
+![Alt text for the GIF](./media/Dashboard-demo.gif)
+[View the document in PDF format](./media/Metabase - Online Retail Sales Report.pdf)
