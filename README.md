@@ -45,4 +45,4 @@ The data flow strictly adheres to the Medallion Architecture to manage data qual
 
 ### Dashboard Output
 ![Alt text for the GIF](./media/Dashboard-demo.gif)
-[View the document in PDF format](./media/Metabase - Online Retail Sales Report.pdf)
+[View the document in PDF format](media/Metabase-OnlineRetailSalesReport.pdf)
