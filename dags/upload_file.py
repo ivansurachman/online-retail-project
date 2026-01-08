@@ -20,9 +20,9 @@ load_dotenv()
 def upload_file():
     bucket_name = os.getenv('BUCKET_NAME')
     gcp_conn_id = 'gcp'
-    bronze_dataset = 'bronze_retail'
-    silver_dataset = 'silver_retail'
-    gold_dataset = 'gold_retail'
+    bronze_dataset = os.getenv('BRONZE_DATASET')
+    silver_dataset = os.getenv('SILVER_DATASET')
+    gold_dataset = os.getenv('GOLD_DATASET')
 
     upload_csv_to_gcs = LocalFilesystemToGCSOperator(
         task_id='upload_csv_to_gcs',

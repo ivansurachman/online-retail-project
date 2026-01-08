@@ -30,7 +30,7 @@ def retail():
     raw_table_invoices = 'raw_invoices'
     raw_table_country = 'raw_country'
     gcp_conn_id = 'gcp'
-    bronze_dataset = 'bronze_retail'
+    bronze_dataset = os.getenv('BRONZE_DATASET')
     invoice_file_path = 'raw/online_retail.csv'
     country_file_path = 'raw/country_codes.csv'
 
