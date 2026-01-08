@@ -25,7 +25,7 @@ The data flow strictly adheres to the Medallion Architecture to manage data qual
 |🥇 Gold (Curated & Modeled)|Final, aggregated, and optimized data. Modeled into a Star Schema with the Fact_Sales table and associated Dimensions.|DBT Mart Models|
 
 ### Star Schema
-<img src="./media/files/Star_schema_retail.png" width="800"/>
+<img src="./media/Star_schema_retail.png" width="800"/>
 
 ## 📚 Data Source: 
 - Sales Transaction Data → https://www.kaggle.com/datasets/tunguz/online-retail
