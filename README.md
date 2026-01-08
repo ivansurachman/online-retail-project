@@ -28,8 +28,8 @@ The data flow strictly adheres to the Medallion Architecture to manage data qual
 <img src="./media/files/Star_schema_retail.png" width="800"/>
 
 ## 📚 Data Source: 
-- Sales Transaction Data -> https://www.kaggle.com/datasets/tunguz/online-retail
-- Country Data -> https://docs.dnb.com/partner/en-US/iso_country_codes
+- Sales Transaction Data → https://www.kaggle.com/datasets/tunguz/online-retail
+- Country Data → https://docs.dnb.com/partner/en-US/iso_country_codes
 
 ## 🛠️ Tech Stack & Roles:
 |Component|Version|Role|
